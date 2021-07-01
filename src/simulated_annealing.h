@@ -5,6 +5,7 @@
 #include <random>
 
 #include "easom_function.h"
+#include "solution.h"
 
 class SimulatedAnnealing {
   enum class DecrementRule {
@@ -54,13 +55,13 @@ class SimulatedAnnealing {
   SimulatedAnnealing(const Args& args = Args());
   ~SimulatedAnnealing();
 
-  const EasomFunction::Solution Start();
+  const Solution<EasomFunction::kNumVars> Start();
 
  private:
   static void AssertArgs(const Args& args = Args());
 
-  const EasomFunction::Solution NeighborhoodSolution(
-      const EasomFunction::Solution& solution);
+  const Solution<EasomFunction::kNumVars> NeighborhoodSolution(
+      const Solution<EasomFunction::kNumVars>& solution);
 
   void DecrementTemperature(double& temperature) const;
 

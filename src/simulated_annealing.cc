@@ -13,8 +13,9 @@ SimulatedAnnealing::SimulatedAnnealing(const Args& args)
 
 SimulatedAnnealing::~SimulatedAnnealing() {}
 
-const EasomFunction::Solution SimulatedAnnealing::Start() {
-  auto solution = EasomFunction::Solution::RandomSolution();
+const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
+  auto solution = Solution<EasomFunction::kNumVars>::RandomSolution(
+      EasomFunction::kDomainMin, EasomFunction::kDomainMax);
   double temperature = args_.initial_temperature;
   double value_delta = std::numeric_limits<double>::max();
 
@@ -57,12 +58,14 @@ void SimulatedAnnealing::AssertArgs(const Args& args) {
   }
 }
 
-const EasomFunction::Solution SimulatedAnnealing::NeighborhoodSolution(
-    const EasomFunction::Solution& solution) {
+const Solution<EasomFunction::kNumVars>
+SimulatedAnnealing::NeighborhoodSolution(
+    const Solution<EasomFunction::kNumVars>& solution) {
   auto distribution =
       std::uniform_real_distribution<>(-kNeighborStepSize, kNeighborStepSize);
-  return EasomFunction::Solution(solution.x1 + distribution(generator_),
-                                 solution.x2 + distribution(generator_));
+  return Solution<EasomFunction::kNumVars>(
+      {solution[EasomFunction::kX1] + distribution(generator_),
+       solution[EasomFunction::kX2] + distribution(generator_)});
 }
 
 void SimulatedAnnealing::DecrementTemperature(double& temperature) const {
