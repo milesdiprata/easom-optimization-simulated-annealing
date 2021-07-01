@@ -16,7 +16,7 @@ class SimulatedAnnealing {
 
   struct Args {
     static constexpr double kDefaultInitialTemperature = 1000.0;
-    static constexpr double kDeafultMinTemperature = 0.1;
+    static constexpr double kDeafultMinTemperature = 0.0;
     static constexpr double kDefaultCoolingRate = 0.5;
     static constexpr std::size_t kDefaultNumIterations = 1000;
     static constexpr double kDefaultValueDeltaCutoff = 0.1;

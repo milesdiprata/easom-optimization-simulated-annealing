@@ -20,8 +20,6 @@ const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
   double value_delta = std::numeric_limits<double>::max();
 
   do {
-    std::cout << "Temperature: " << temperature << std::endl;
-
     for (std::size_t i = 0; i < args_.num_iterations; ++i) {
       auto new_solution = NeighborhoodSolution(solution);
       double value_delta = EasomFunction::TwoVars(new_solution) -
@@ -41,8 +39,6 @@ const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
     }
 
     DecrementTemperature(temperature);
-    std::cout << "Solution: " << solution << std::endl;
-
   } while (!Cutoff(temperature, value_delta));
 
   return solution;
