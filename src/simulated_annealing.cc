@@ -24,8 +24,8 @@ const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
 
     for (std::size_t i = 0; i < args_.num_iterations; ++i) {
       auto new_solution = NeighborhoodSolution(solution);
-      double value_delta =
-          EasomFunction::f(new_solution) - EasomFunction::f(solution);
+      double value_delta = EasomFunction::TwoVars(new_solution) -
+                           EasomFunction::TwoVars(solution);
 
       if ((args_.maximizing && value_delta > 0.0) ||
           (!args_.maximizing && value_delta <= 0.0)) {
