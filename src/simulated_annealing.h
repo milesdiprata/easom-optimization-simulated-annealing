@@ -16,37 +16,36 @@ class SimulatedAnnealing {
 
   struct Args {
     static constexpr double kDefaultInitialTemperature = 1000.0;
-    static constexpr double kDeafultMinTemperature = 0.0;
-    static constexpr double kDefaultCoolingRate = 0.5;
+    static constexpr double kDeafultMinTemperature = 0.1;
     static constexpr std::size_t kDefaultNumIterations = 1000;
     static constexpr double kDefaultValueDeltaCutoff = 0.1;
-    static constexpr bool kDefaultMaximization = false;
+    static constexpr double kDefaultAlpha = 0.5;
+    static constexpr double kDefaultBeta = 5.0;
 
     constexpr Args(
         const double initial_temperature = kDefaultInitialTemperature,
         const double min_temperature = kDeafultMinTemperature,
-        const double cooling_rate = kDefaultCoolingRate,
         const std::size_t num_iterations = kDefaultNumIterations,
         const DecrementRule decrement_rule = DecrementRule::kLinear,
-        const double value_delta_cutoff = kDefaultValueDeltaCutoff,
-        const bool maximizing = kDefaultMaximization)
+        const double alpha = kDefaultAlpha, const double beta = kDefaultBeta,
+        const double value_delta_cutoff = kDefaultValueDeltaCutoff)
         : initial_temperature(initial_temperature),
           min_temperature(min_temperature),
-          cooling_rate(cooling_rate),
           num_iterations(num_iterations),
           decrement_rule(decrement_rule),
-          value_delta_cutoff(value_delta_cutoff),
-          maximizing(maximizing) {}
+          alpha(alpha),
+          beta(beta),
+          value_delta_cutoff(value_delta_cutoff) {}
 
     constexpr ~Args() = default;
 
     double initial_temperature;
     double min_temperature;
-    double cooling_rate;
     std::size_t num_iterations;
     DecrementRule decrement_rule;
+    double alpha;
+    double beta;
     double value_delta_cutoff;
-    const bool maximizing;
   };
 
  public:
@@ -60,7 +59,7 @@ class SimulatedAnnealing {
  private:
   static void AssertArgs(const Args& args = Args());
 
-  const Solution<EasomFunction::kNumVars> NeighborhoodSolution(
+  const Solution<EasomFunction::kNumVars> Neighbor(
       const Solution<EasomFunction::kNumVars>& solution);
 
   void DecrementTemperature(double& temperature) const;
@@ -68,8 +67,7 @@ class SimulatedAnnealing {
   const bool Cutoff(const double temperature, const double value_delta) const;
 
   static const double AcceptanceProbability(const double value_delta,
-                                            const double temperature,
-                                            const bool maximizing);
+                                            const double temperature);
 
   Args args_;
   std::random_device random_device_;
