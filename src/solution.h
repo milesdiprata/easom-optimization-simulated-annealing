@@ -11,13 +11,13 @@ template <std::size_t N>
 struct Solution {
   constexpr Solution(const std::array<double, N> vars = std::array<double, N>())
       : vars(vars) {}
+  constexpr Solution(const Solution<N>& Solution) : vars(Solution.vars) {}
   ~Solution() = default;
 
   constexpr double operator[](const std::size_t i) const { return vars[i]; }
   constexpr double& operator[](const std::size_t i) { return vars[i]; }
 
-  static const Solution RandomSolution(const double var_min,
-                                       const double var_max);
+  static const Solution Random(const double var_min, const double var_max);
 
   std::array<double, N> vars;
 };
@@ -45,8 +45,8 @@ constexpr bool operator!=(const Solution<N>& lhs, const Solution<N>& rhs) {
 }
 
 template <std::size_t N>
-const Solution<N> Solution<N>::RandomSolution(const double var_min,
-                                              const double var_max) {
+const Solution<N> Solution<N>::Random(const double var_min,
+                                      const double var_max) {
   static auto random_device = std::random_device();
   static auto generator = std::mt19937(random_device());
   auto distribution = std::uniform_real_distribution<>(var_min, var_max);

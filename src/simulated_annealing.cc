@@ -1,6 +1,7 @@
 #include "simulated_annealing.h"
 
 #include <cmath>
+#include <fstream>
 #include <limits>
 #include <stdexcept>
 
@@ -13,9 +14,12 @@ SimulatedAnnealing::SimulatedAnnealing(const Args& args)
 
 SimulatedAnnealing::~SimulatedAnnealing() {}
 
-const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
-  auto solution = Solution<EasomFunction::kNumVars>::RandomSolution(
-      EasomFunction::kDomainMin, EasomFunction::kDomainMax);
+const SimulatedAnnealing::Solution SimulatedAnnealing::Start() {
+  auto csv_file =
+      std::ofstream("results.csv", std::fstream::out | std::fstream::trunc);
+  csv_file << "temperature,value\n";
+
+  auto solution = args_.initial_solution;
   double temperature = args_.initial_temperature;
   double value_delta = std::numeric_limits<double>::max();
 
@@ -36,9 +40,11 @@ const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Start() {
       }
     }
 
+    csv_file << temperature << "," << EasomFunction::TwoVars(solution) << "\n";
     DecrementTemperature(temperature);
   }
 
+  csv_file.close();
   return solution;
 }
 
@@ -52,14 +58,13 @@ void SimulatedAnnealing::AssertArgs(const Args& args) {
   }
 }
 
-const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Neighbor(
-    const Solution<EasomFunction::kNumVars>& solution) {
+const SimulatedAnnealing::Solution SimulatedAnnealing::Neighbor(
+    const Solution& solution) {
   auto x1_dis = std::normal_distribution<>(solution[EasomFunction::kX1],
                                            kNeighborStepSize);
   auto x2_dis = std::normal_distribution<>(solution[EasomFunction::kX2],
                                            kNeighborStepSize);
-  auto neighbor = Solution<EasomFunction::kNumVars>(
-      {x1_dis(generator_), x2_dis(generator_)});
+  auto neighbor = Solution({x1_dis(generator_), x2_dis(generator_)});
 
   if (neighbor[EasomFunction::kX1] >= EasomFunction::kDomainMin &&
       neighbor[EasomFunction::kX2] >= EasomFunction::kDomainMin &&
@@ -67,8 +72,8 @@ const Solution<EasomFunction::kNumVars> SimulatedAnnealing::Neighbor(
       neighbor[EasomFunction::kX2] <= EasomFunction::kDomainMax) {
     return neighbor;
   } else {
-    return Solution<EasomFunction::kNumVars>::RandomSolution(
-        EasomFunction::kDomainMin, EasomFunction::kDomainMax);
+    return Solution::Random(EasomFunction::kDomainMin,
+                            EasomFunction::kDomainMax);
   }
 }
 

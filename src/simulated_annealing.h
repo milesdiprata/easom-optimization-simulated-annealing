@@ -8,6 +8,9 @@
 #include "solution.h"
 
 class SimulatedAnnealing {
+ public:
+  using Solution = Solution<EasomFunction::kNumVars>;
+
   enum class DecrementRule {
     kLinear,
     kGeometric,
@@ -23,13 +26,15 @@ class SimulatedAnnealing {
     static constexpr double kDefaultBeta = 5.0;
 
     constexpr Args(
+        const Solution initial_solution = Solution(),
         const double initial_temperature = kDefaultInitialTemperature,
         const double min_temperature = kDeafultMinTemperature,
         const std::size_t num_iterations = kDefaultNumIterations,
         const DecrementRule decrement_rule = DecrementRule::kLinear,
         const double alpha = kDefaultAlpha, const double beta = kDefaultBeta,
         const double value_delta_cutoff = kDefaultValueDeltaCutoff)
-        : initial_temperature(initial_temperature),
+        : initial_solution(initial_solution),
+          initial_temperature(initial_temperature),
           min_temperature(min_temperature),
           num_iterations(num_iterations),
           decrement_rule(decrement_rule),
@@ -39,6 +44,7 @@ class SimulatedAnnealing {
 
     constexpr ~Args() = default;
 
+    Solution initial_solution;
     double initial_temperature;
     double min_temperature;
     std::size_t num_iterations;
@@ -48,19 +54,17 @@ class SimulatedAnnealing {
     double value_delta_cutoff;
   };
 
- public:
   static constexpr double kNeighborStepSize = 0.1;
 
   SimulatedAnnealing(const Args& args = Args());
   ~SimulatedAnnealing();
 
-  const Solution<EasomFunction::kNumVars> Start();
+  const Solution Start();
 
  private:
   static void AssertArgs(const Args& args = Args());
 
-  const Solution<EasomFunction::kNumVars> Neighbor(
-      const Solution<EasomFunction::kNumVars>& solution);
+  const Solution Neighbor(const Solution& solution);
 
   void DecrementTemperature(double& temperature) const;
 
