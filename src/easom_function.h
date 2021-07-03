@@ -14,7 +14,7 @@ struct EasomFunction {
   EasomFunction() = delete;
   ~EasomFunction() = delete;
 
-  static const double TwoVars(const Solution<kNumVars>& solution);
+  static const long double TwoVars(const Solution<kNumVars>& solution);
 };
 
 #endif  // EASOM_FUNCTION_H_

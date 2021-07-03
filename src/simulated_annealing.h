@@ -20,13 +20,13 @@ class SimulatedAnnealing {
   struct Args {
     static constexpr double kDefaultInitialTemperature = 1000.0;
     static constexpr double kDeafultMinTemperature = 0.1;
-    static constexpr std::size_t kDefaultNumIterations = 1000;
+    static constexpr std::size_t kDefaultNumIterations = 10000;
     static constexpr double kDefaultValueDeltaCutoff = 0.1;
     static constexpr double kDefaultAlpha = 0.5;
     static constexpr double kDefaultBeta = 5.0;
 
     constexpr Args(
-        const Solution initial_solution = Solution(),
+        const Solution initial_solution = Solution({-100.0, -100.0}),
         const double initial_temperature = kDefaultInitialTemperature,
         const double min_temperature = kDeafultMinTemperature,
         const std::size_t num_iterations = kDefaultNumIterations,
@@ -62,15 +62,14 @@ class SimulatedAnnealing {
   const Solution Start();
 
  private:
-  static void AssertArgs(const Args& args = Args());
-
   const Solution Neighbor(const Solution& solution);
 
   void DecrementTemperature(double& temperature) const;
 
-  const bool Cutoff(const double temperature, const double value_delta) const;
+  const bool Cutoff(const double temperature,
+                    const long double value_delta) const;
 
-  static const double AcceptanceProbability(const double value_delta,
+  static const double AcceptanceProbability(const long double value_delta,
                                             const double temperature);
 
   Args args_;

@@ -9,17 +9,22 @@
 
 template <std::size_t N>
 struct Solution {
-  constexpr Solution(const std::array<double, N> vars = std::array<double, N>())
+  constexpr Solution(
+      const std::array<long double, N> vars = std::array<long double, N>())
       : vars(vars) {}
+
   constexpr Solution(const Solution<N>& Solution) : vars(Solution.vars) {}
+
   ~Solution() = default;
 
-  constexpr double operator[](const std::size_t i) const { return vars[i]; }
-  constexpr double& operator[](const std::size_t i) { return vars[i]; }
+  constexpr long double operator[](const std::size_t i) const {
+    return vars[i];
+  }
+  constexpr long double operator[](const std::size_t i) { return vars[i]; }
 
   static const Solution Random(const double var_min, const double var_max);
 
-  std::array<double, N> vars;
+  std::array<long double, N> vars;
 };
 
 template <std::size_t N>

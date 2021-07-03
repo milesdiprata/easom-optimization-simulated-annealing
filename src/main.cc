@@ -1,5 +1,6 @@
 #include <array>
 #include <iostream>
+#include <numbers>
 
 #include "easom_function.h"
 #include "simulated_annealing.h"
@@ -37,7 +38,8 @@ void three() {
 }  // namespace experiment
 
 int main(const int argc, const char* const argv[]) {
-  experiment::two();
+  auto solver = SimulatedAnnealing();
+  solver.Start();
 
   return 0;
 }
